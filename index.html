@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Shoot hordes of zombies to survive! How long can you survive? How many zombies can you kill?" />
+    <title>Human vs Zombies</title>
+    <link rel="icon" type="image/x-icon" href="./Public/Icon/favicon.ico" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/keyboard-css@1.2.4/dist/css/main.min.css" />
+    <style>
+      @keyframes disappear {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      #interface {
+        animation: disappear 4s linear 1 forwards;
+      }
+    </style>
+  </head>
+  <body class="box-border m-0 p-0 overflow-hidden select-none bg-black">
+    <div id="interface" class="btns fixed top-0 left-1/2 transform -translate-x-1/2 mt-8 text-center hidden">
+      <div class="w mb-4">
+          <kbd class="kbc-button">W</kbd>
+      </div>
+      <div class="row flex gap-4 mb-4 justify-center">
+          <kbd class="kbc-button">A</kbd>
+          <kbd class="kbc-button">S</kbd>
+          <kbd class="kbc-button">D</kbd>
+      </div>
+      <p class="text-white">To Move</p>
+      <kbd class="kbc-button mb-4">Left Mouse Click</kbd>
+      <p class="text-white">To Shoot</p>
+      <kbd class="kbc-button mb-4">R</kbd>
+      <p class="text-white">To Reload</p>
+    </div>
+    <div id="scoreDiv" class="fixed text-white text-xl font-bold ml-2 mt-1 hidden">
+      <span>Score: </span><span id="scoreEl">0</span>
+    </div>
+    <div id="ammoDiv" class="fixed text-white text-5xl font-bold ml-2 mt-1 bottom-0 right-0 hidden mb-16 mr-20">
+      <span id="ammoEl">30</span> / 30
+    </div>
+    <div id="zombiesDiv" class="fixed text-white text-xl font-bold ml-2 mt-10 hidden">
+      Zombies Slaughtered: <span id="zombiesEl">0</span>
+    </div>
+    <div class="fixed inset-0 flex items-center justify-center z-10" id="modalEl">
+      <div class="bg-white max-w-md w-full p-6 text-center rounded">
+        <h1
+          class="text-5xl font-bold leading-none text-gray-700"
+          id="modalScoreEl"
+        >
+          0
+        </h1>
+        <p class="text-md text-gray-600 mb-4">Points</p>
+        <button
+          class="bg-blue-500 text-white w-full py-3 rounded-full font-bold font-sm"
+          id="startGameBtn"
+        >
+          Start Game
+        </button>
+      </div>
+    </div>
+    <div id="healthbar1" class="fixed bg-red-600 w-[100px] h-[10px] rounded-sm top-1/2 left-1/2 z-1">
+      <div id="healthbar2" class="fixed bg-green-600 w-[100px] h-[10px] rounded-sm top-1/2 left-1/2 z-1"></div>
+    </div>
+    <canvas id="canvas" class="cursor-none"></canvas>
+    <!-- Player Move-->
+    <img class="hidden" src="./Public/Player/Move/1.png" alt="" id="move1" />
+    <img class="hidden" src="./Public/Player/Move/2.png" alt="" id="move2" />
+    <img class="hidden" src="./Public/Player/Move/3.png" alt="" id="move3" />
+    <img class="hidden" src="./Public/Player/Move/4.png" alt="" id="move4" />
+    <img class="hidden" src="./Public/Player/Move/5.png" alt="" id="move5" />
+    <img class="hidden" src="./Public/Player/Move/6.png" alt="" id="move6" />
+    <img class="hidden" src="./Public/Player/Move/7.png" alt="" id="move7" />
+    <img class="hidden" src="./Public/Player/Move/8.png" alt="" id="move8" />
+    <img class="hidden" src="./Public/Player/Move/9.png" alt="" id="move9" />
+    <img class="hidden" src="./Public/Player/Move/10.png" alt="" id="move10" />
+    <img class="hidden" src="./Public/Player/Move/11.png" alt="" id="move11" />
+    <img class="hidden" src="./Public/Player/Move/12.png" alt="" id="move12" />
+    <img class="hidden" src="./Public/Player/Move/13.png" alt="" id="move13" />
+    <img class="hidden" src="./Public/Player/Move/14.png" alt="" id="move14" />
+    <img class="hidden" src="./Public/Player/Move/15.png" alt="" id="move15" />
+    <img class="hidden" src="./Public/Player/Move/16.png" alt="" id="move16" />
+    <img class="hidden" src="./Public/Player/Move/17.png" alt="" id="move17" />
+    <img class="hidden" src="./Public/Player/Move/18.png" alt="" id="move18" />
+    <img class="hidden" src="./Public/Player/Move/19.png" alt="" id="move19" />
+    <img class="hidden" src="./Public/Player/Move/20.png" alt="" id="move20" />
+    <!-- Player Idle -->
+    <img class="hidden" src="./Public/Player/Idle/1.png" alt="" id="idle1" />
+    <img class="hidden" src="./Public/Player/Idle/2.png" alt="" id="idle2" />
+    <img class="hidden" src="./Public/Player/Idle/3.png" alt="" id="idle3" />
+    <img class="hidden" src="./Public/Player/Idle/4.png" alt="" id="idle4" />
+    <img class="hidden" src="./Public/Player/Idle/5.png" alt="" id="idle5" />
+    <img class="hidden" src="./Public/Player/Idle/6.png" alt="" id="idle6" />
+    <img class="hidden" src="./Public/Player/Idle/7.png" alt="" id="idle7" />
+    <img class="hidden" src="./Public/Player/Idle/8.png" alt="" id="idle8" />
+    <img class="hidden" src="./Public/Player/Idle/9.png" alt="" id="idle9" />
+    <img class="hidden" src="./Public/Player/Idle/10.png" alt="" id="idle10" />
+    <img class="hidden" src="./Public/Player/Idle/11.png" alt="" id="idle11" />
+    <img class="hidden" src="./Public/Player/Idle/12.png" alt="" id="idle12" />
+    <img class="hidden" src="./Public/Player/Idle/13.png" alt="" id="idle13" />
+    <img class="hidden" src="./Public/Player/Idle/14.png" alt="" id="idle14" />
+    <img class="hidden" src="./Public/Player/Idle/15.png" alt="" id="idle15" />
+    <img class="hidden" src="./Public/Player/Idle/16.png" alt="" id="idle16" />
+    <img class="hidden" src="./Public/Player/Idle/17.png" alt="" id="idle17" />
+    <img class="hidden" src="./Public/Player/Idle/18.png" alt="" id="idle18" />
+    <img class="hidden" src="./Public/Player/Idle/19.png" alt="" id="idle19" />
+    <img class="hidden" src="./Public/Player/Idle/20.png" alt="" id="idle20" />
+    <!-- Player Reload -->
+    <img class="hidden" src="./Public/Player/Reload/1.png" alt="" id="reload1" />
+    <img class="hidden" src="./Public/Player/Reload/2.png" alt="" id="reload2" />
+    <img class="hidden" src="./Public/Player/Reload/3.png" alt="" id="reload3" />
+    <img class="hidden" src="./Public/Player/Reload/4.png" alt="" id="reload4" />
+    <img class="hidden" src="./Public/Player/Reload/5.png" alt="" id="reload5" />
+    <img class="hidden" src="./Public/Player/Reload/6.png" alt="" id="reload6" />
+    <img class="hidden" src="./Public/Player/Reload/7.png" alt="" id="reload7" />
+    <img class="hidden" src="./Public/Player/Reload/8.png" alt="" id="reload8" />
+    <img class="hidden" src="./Public/Player/Reload/9.png" alt="" id="reload9" />
+    <img class="hidden" src="./Public/Player/Reload/10.png" alt="" id="reload10" />
+    <img class="hidden" src="./Public/Player/Reload/11.png" alt="" id="reload11" />
+    <img class="hidden" src="./Public/Player/Reload/12.png" alt="" id="reload12" />
+    <img class="hidden" src="./Public/Player/Reload/13.png" alt="" id="reload13" />
+    <img class="hidden" src="./Public/Player/Reload/14.png" alt="" id="reload14" />
+    <img class="hidden" src="./Public/Player/Reload/15.png" alt="" id="reload15" />
+    <img class="hidden" src="./Public/Player/Reload/16.png" alt="" id="reload16" />
+    <img class="hidden" src="./Public/Player/Reload/17.png" alt="" id="reload17" />
+    <img class="hidden" src="./Public/Player/Reload/18.png" alt="" id="reload18" />
+    <img class="hidden" src="./Public/Player/Reload/19.png" alt="" id="reload19" />
+    <img class="hidden" src="./Public/Player/Reload/20.png" alt="" id="reload20" />
+    <!-- Player Feet Idle -->
+    <img class="hidden" src="./Public/Player/Feet Idle/1.png" alt="" id="feetIdle1" />
+    <!-- Player Feet Walk -->
+    <img class="hidden" src="./Public/Player/Feet Walk/1.png" alt="" id="feetWalk1" />
+    <img class="hidden" src="./Public/Player/Feet Walk/2.png" alt="" id="feetWalk2" />
+    <img class="hidden" src="./Public/Player/Feet Walk/3.png" alt="" id="feetWalk3" />
+    <img class="hidden" src="./Public/Player/Feet Walk/4.png" alt="" id="feetWalk4" />
+    <img class="hidden" src="./Public/Player/Feet Walk/5.png" alt="" id="feetWalk5" />
+    <img class="hidden" src="./Public/Player/Feet Walk/6.png" alt="" id="feetWalk6" />
+    <img class="hidden" src="./Public/Player/Feet Walk/7.png" alt="" id="feetWalk7" />
+    <img class="hidden" src="./Public/Player/Feet Walk/8.png" alt="" id="feetWalk8" />
+    <img class="hidden" src="./Public/Player/Feet Walk/9.png" alt="" id="feetWalk9" />
+    <img class="hidden" src="./Public/Player/Feet Walk/10.png" alt="" id="feetWalk10" />
+    <img class="hidden" src="./Public/Player/Feet Walk/11.png" alt="" id="feetWalk11" />
+    <img class="hidden" src="./Public/Player/Feet Walk/12.png" alt="" id="feetWalk12" />
+    <img class="hidden" src="./Public/Player/Feet Walk/13.png" alt="" id="feetWalk13" />
+    <img class="hidden" src="./Public/Player/Feet Walk/14.png" alt="" id="feetWalk14" />
+    <img class="hidden" src="./Public/Player/Feet Walk/15.png" alt="" id="feetWalk15" />
+    <img class="hidden" src="./Public/Player/Feet Walk/16.png" alt="" id="feetWalk16" />
+    <img class="hidden" src="./Public/Player/Feet Walk/17.png" alt="" id="feetWalk17" />
+    <img class="hidden" src="./Public/Player/Feet Walk/18.png" alt="" id="feetWalk18" />
+    <img class="hidden" src="./Public/Player/Feet Walk/19.png" alt="" id="feetWalk19" />
+    <img class="hidden" src="./Public/Player/Feet Walk/20.png" alt="" id="feetWalk20" />
+    <!-- Enemy Move -->
+    <img class="hidden" src="./Public/Enemy/Move/1.png" alt="" id="enemyMove1" />
+    <img class="hidden" src="./Public/Enemy/Move/2.png" alt="" id="enemyMove2" />
+    <img class="hidden" src="./Public/Enemy/Move/3.png" alt="" id="enemyMove3" />
+    <img class="hidden" src="./Public/Enemy/Move/4.png" alt="" id="enemyMove4" />
+    <img class="hidden" src="./Public/Enemy/Move/5.png" alt="" id="enemyMove5" />
+    <img class="hidden" src="./Public/Enemy/Move/6.png" alt="" id="enemyMove6" />
+    <img class="hidden" src="./Public/Enemy/Move/7.png" alt="" id="enemyMove7" />
+    <img class="hidden" src="./Public/Enemy/Move/8.png" alt="" id="enemyMove8" />
+    <img class="hidden" src="./Public/Enemy/Move/9.png" alt="" id="enemyMove9" />
+    <img class="hidden" src="./Public/Enemy/Move/10.png" alt="" id="enemyMove10" />
+    <img class="hidden" src="./Public/Enemy/Move/11.png" alt="" id="enemyMove11" />
+    <img class="hidden" src="./Public/Enemy/Move/12.png" alt="" id="enemyMove12" />
+    <img class="hidden" src="./Public/Enemy/Move/13.png" alt="" id="enemyMove13" />
+    <img class="hidden" src="./Public/Enemy/Move/14.png" alt="" id="enemyMove14" />
+    <img class="hidden" src="./Public/Enemy/Move/15.png" alt="" id="enemyMove15" />
+    <img class="hidden" src="./Public/Enemy/Move/16.png" alt="" id="enemyMove16" />
+    <img class="hidden" src="./Public/Enemy/Move/17.png" alt="" id="enemyMove17" />
+    <!-- Crosshair -->
+    <img class="hidden" src="./Public/Crosshair/crosshair.png" alt="" id="crosshair" />
+    <script src="./script.js"></script>
+  </body>
+</html>
